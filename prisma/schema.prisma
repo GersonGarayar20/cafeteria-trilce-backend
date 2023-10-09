@@ -9,3 +9,41 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id_user  Int     @id @default(autoincrement())
+  name     String
+  email    String  @unique
+  password String
+  role     String
+  Order    Order[]
+}
+
+model Menu {
+  id_menu     Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Decimal
+  Order       Order[]
+  category    Category @relation(fields: [category_id], references: [id_category])
+  category_id Int
+}
+
+model Order {
+  id_order       Int      @id @default(autoincrement())
+  menu           Menu     @relation(fields: [menu_id], references: [id_menu])
+  menu_id        Int
+  user           User     @relation(fields: [user_id], references: [id_user])
+  user_id        Int
+  amount         Int
+  order_date     DateTime @default(now())
+  total_price    Decimal
+  state          String
+  payment_method String
+}
+
+model Category {
+  id_category Int    @id @default(autoincrement())
+  name        String
+  Menu        Menu[]
+}
