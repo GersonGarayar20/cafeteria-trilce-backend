@@ -1,8 +1,9 @@
 import { Router } from 'express'
-
+import { findAll } from '../controllers/categories'
 export const categories = Router()
 
 categories
-  .get('/', (req, res) => {
-    res.json('data')
-  })
+  .get('/', findAll)
+  .post('/', () => {})
+  .put('/', () => {})
+  .delete('/', () => {})
