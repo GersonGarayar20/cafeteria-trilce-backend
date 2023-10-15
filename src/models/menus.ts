@@ -20,6 +20,23 @@ export const getAllMenus = async () => {
   }
 }
 
+export const getMenuById = async (id: number) => {
+  try {
+    const data = await prisma.menu.findUnique({
+      where: {
+        id_menu: id
+      }
+    })
+
+    console.log(data)
+    return data
+  } catch (err) {
+    return err
+  } finally {
+    await prisma.$disconnect()
+  }
+}
+
 export const addMenu = async (menu: MenuInterface) => {
   try {
     const data = await prisma.menu.create({

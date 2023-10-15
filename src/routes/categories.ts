@@ -5,5 +5,5 @@ export const categories = Router()
 categories
   .get('/', findAll)
   .post('/', create)
-  .put('/', update)
-  .delete('/', remove)
+  .put('/:id', update)
+  .delete('/:id', remove)

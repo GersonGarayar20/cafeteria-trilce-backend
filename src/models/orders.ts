@@ -21,6 +21,23 @@ export const getAllOrders = async () => {
   }
 }
 
+export const getOrderById = async (id: number) => {
+  try {
+    const data = await prisma.order.findUnique({
+      where: {
+        id_order: id
+      }
+    })
+
+    console.log(data)
+    return data
+  } catch (err) {
+    return err
+  } finally {
+    await prisma.$disconnect()
+  }
+}
+
 export const addOrder = async (order: OrderInterface) => {
   try {
     const { menu_id: menuId } = order

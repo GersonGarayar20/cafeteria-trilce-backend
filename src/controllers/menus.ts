@@ -1,9 +1,18 @@
 import { Request, Response } from 'express'
-import { getAllMenus, addMenu, updateMenu, deleteMenu } from '../models/menus'
+import { getAllMenus, getMenuById, addMenu, updateMenu, deleteMenu } from '../models/menus'
 import { validarMenu, partialValidarMenu } from '../schemas/menuSchema'
 
 export const findAll = async (req: Request, res: Response) => {
   const data = await getAllMenus()
+  res.json({
+    data
+  })
+}
+
+export const findOne = async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  const data = await getMenuById(+id)
   res.json({
     data
   })

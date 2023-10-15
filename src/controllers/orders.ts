@@ -1,9 +1,18 @@
 import { Request, Response } from 'express'
-import { getAllOrders, addOrder, updateOrder, deleteOrder } from '../models/orders'
+import { getAllOrders, getOrderById, addOrder, updateOrder, deleteOrder } from '../models/orders'
 import { validarOrder, partialValidarOrder } from '../schemas/orderSchema'
 
 export const findAll = async (req: Request, res: Response) => {
   const data = await getAllOrders()
+  res.json({
+    data
+  })
+}
+
+export const findOne = async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  const data = await getOrderById(+id)
   res.json({
     data
   })
