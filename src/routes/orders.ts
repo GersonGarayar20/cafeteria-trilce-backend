@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { findAll, create, update, remove } from '../controllers/menus'
-export const menus = Router()
+export const orders = Router()
 
-menus
+orders
   .get('/', findAll)
   .post('/', create)
   .put('/', update)
