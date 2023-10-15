@@ -4,6 +4,7 @@ import { validarOrder, partialValidarOrder } from '../schemas/orderSchema'
 
 export const findAll = async (req: Request, res: Response) => {
   const data = await getAllOrders()
+  console.log(data)
   res.json({
     data
   })
