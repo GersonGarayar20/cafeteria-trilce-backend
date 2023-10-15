@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { findAll, create, update, remove } from '../controllers/menus'
+import { findAll, create, update, remove } from '../controllers/orders'
 export const orders = Router()
 
 orders
