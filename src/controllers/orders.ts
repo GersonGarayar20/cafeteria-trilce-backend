@@ -1,19 +1,29 @@
 import { Request, Response } from 'express'
-import { getAllCategories, addCategory, updateCategory, deleteCategory } from '../models/categories'
-import { validarCategory } from '../schemas/categorySchema'
+import { getAllOrders, getOrderById, addOrder, updateOrder, deleteOrder } from '../models/orders'
+import { validarOrder, partialValidarOrder } from '../schemas/orderSchema'
 
 export const findAll = async (req: Request, res: Response) => {
-  const data = await getAllCategories()
+  const data = await getAllOrders()
+  console.log(data)
+  res.json({
+    data
+  })
+}
+
+export const findOne = async (req: Request, res: Response) => {
+  const { id } = req.params
+
+  const data = await getOrderById(+id)
   res.json({
     data
   })
 }
 
 export const create = async (req: Request, res: Response) => {
-  const result = validarCategory(req.body)
+  const result = validarOrder(req.body)
 
   if (result.success) {
-    const data = await addCategory(result.data)
+    const data = await addOrder(result.data)
     res.json({
       data
     })
@@ -23,11 +33,11 @@ export const create = async (req: Request, res: Response) => {
 }
 
 export const update = async (req: Request, res: Response) => {
-  const result = validarCategory(req.body)
+  const result = partialValidarOrder(req.body)
 
   if (result.success) {
     const { id } = req.params
-    const data = await updateCategory(+id, result.data)
+    const data = await updateOrder(+id, result.data)
     res.json({
       data
     })
@@ -37,7 +47,7 @@ export const update = async (req: Request, res: Response) => {
 }
 export const remove = async (req: Request, res: Response) => {
   const { id } = req.params
-  const data = await deleteCategory(+id)
+  const data = await deleteOrder(+id)
   res.json({
     data
   })

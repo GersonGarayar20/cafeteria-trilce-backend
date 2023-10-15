@@ -16,7 +16,7 @@ export const getAllCategories = async () => {
   }
 }
 
-export const addCategory = async (name: string) => {
+export const addCategory = async ({ name }: CategoryInterface) => {
   try {
     const data = await prisma.category.create({
       data: {
@@ -32,11 +32,11 @@ export const addCategory = async (name: string) => {
   }
 }
 
-export const updateCategory = async ({ id_category: idCategory, name }: CategoryInterface) => {
+export const updateCategory = async (id: number, { name }: CategoryInterface) => {
   try {
     const data = await prisma.category.update({
       where: {
-        id_category: idCategory
+        id_category: id
       },
       data: {
         name
