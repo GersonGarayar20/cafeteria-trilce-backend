@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { findAll } from '../controllers/categories'
+import { findAll, create, update, remove } from '../controllers/categories'
 export const categories = Router()
 
 categories
   .get('/', findAll)
-  .post('/', () => {})
-  .put('/', () => {})
-  .delete('/', () => {})
+  .post('/', create)
+  .put('/', update)
+  .delete('/', remove)
