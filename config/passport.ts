@@ -3,7 +3,7 @@
 import { PrismaClient } from '@prisma/client'
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
-import { encryptPassword } from './encrypt'
+import { encryptPassword, verifyPassword } from './encrypt'
 const prisma = new PrismaClient()
 const Strategy = LocalStrategy.Strategy
 
@@ -15,10 +15,10 @@ passport.use('signup', new Strategy({
   try {
     let user = await prisma.user.findUnique({
       where: {
-        email,
-        password
+        email
       }
     })
+
     if (user != null) return done(null, user, { message: 'usuario ya registrado' })
 
     const { name } = req.body
@@ -47,14 +47,20 @@ passport.use('login', new Strategy({
   try {
     const user = await prisma.user.findUnique({
       where: {
-        email,
-        password
+        email
       }
     })
     if (user == null) {
-      return done(null, false, { message: 'user not found' })
+      return done(null, false, { message: 'usuario no encontrado' })
     }
-    return done(null, user, { message: 'login successfull' })
+    console.log(user)
+    const isValidPassword = await verifyPassword(password, user.password)
+
+    console.log(isValidPassword)
+
+    if (!isValidPassword) return done(null, false, { message: 'usuario o password incorrecto' })
+
+    return done(null, user, { message: 'logueado satisfactoriamente' })
   } catch (error) {
     done(error)
   }

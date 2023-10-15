@@ -9,6 +9,7 @@ export async function encryptPassword (password: string) {
 
 // Función para verificar una contraseña
 export async function verifyPassword (inputPassword: string, hashedPassword: string) {
+  console.log(inputPassword)
   const match = await bcrypt.compare(inputPassword, hashedPassword)
   return match
 }
