@@ -19,11 +19,11 @@ passport.use('signup', new Strategy({
       }
     })
 
-    if (user != null) return done(null, user, { message: 'usuario ya registrado' })
-
-    const { name } = req.body
+    if (user != null) return done(null, false, { message: 'usuario ya registrado' })
 
     const encryptedPasssword = encryptPassword(password)
+
+    const { name } = req.body
 
     user = await prisma.user.create({
       data: {
@@ -34,7 +34,7 @@ passport.use('signup', new Strategy({
 
       }
     })
-    return done(null, user, { message: 'created successfull' })
+    return done(null, user, { message: 'creado satisfactoriamente' })
   } catch (error) {
     done(error)
   }
@@ -51,12 +51,10 @@ passport.use('login', new Strategy({
       }
     })
     if (user == null) {
-      return done(null, false, { message: 'usuario no encontrado' })
+      return done(null, false, { message: 'usuario o password no encontrado' })
     }
-    console.log(user)
-    const isValidPassword = await verifyPassword(password, user.password)
 
-    console.log(isValidPassword)
+    const isValidPassword = await verifyPassword(password, user.password)
 
     if (!isValidPassword) return done(null, false, { message: 'usuario o password incorrecto' })
 

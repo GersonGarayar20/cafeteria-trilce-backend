@@ -13,24 +13,3 @@ export async function verifyPassword (inputPassword: string, hashedPassword: str
   const match = await bcrypt.compare(inputPassword, hashedPassword)
   return match
 }
-
-// Ejemplo de uso:
-/* const password = 'miContrasena'
-
-encryptPassword(password)
-  .then((hash) => {
-    console.log('Contraseña encriptada:', hash)
-
-    // Simular verificación
-    verifyPassword('miContrasena', hash)
-      .then((isMatch) => {
-        if (isMatch) {
-          console.log('La contraseña coincide')
-        } else {
-          console.log('La contraseña no coincide')
-        }
-      })
-      .catch((error) => console.error('Error al verificar contraseña:', error))
-  })
-  .catch((error) => console.error('Error al encriptar contraseña:', error))
- */

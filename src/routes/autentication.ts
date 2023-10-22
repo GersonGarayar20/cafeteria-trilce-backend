@@ -1,10 +1,12 @@
 import { Router } from 'express'
-import passport from '../../config/passport'
 import { logIn, signUp } from '../controllers/autentication'
+import { authenticateLogin, authenticateSignup } from '../middleware/authenticate'
+import { validatedSchemaLogin, validatedSchemaSignup } from '../middleware/validation'
+import { generateToken } from '../middleware/authJwt'
 
 export const autentication = Router()
 
 autentication
-  .post('/signup', passport.authenticate('signup', { session: false }), signUp)
+  .post('/signup', validatedSchemaSignup, authenticateSignup, signUp)
 
-  .post('/login', passport.authenticate('login', { session: false }), logIn)
+  .post('/login', validatedSchemaLogin, authenticateLogin, generateToken, logIn)
