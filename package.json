@@ -13,10 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "engines": {
-    "node": "18.18.2"
-  },  
+  "license": "ISC", 
   "dependencies": {
     "@prisma/client": "^5.4.1",
     "bcrypt": "^5.1.1",
