@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
 import passport from '../../config/passport'
+import { RequestExtends, UserWithoutPassword } from '../types'
 
-export const authenticateSignup = (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate('signup', { session: false }, (err: Error, user: User | false, info: any) => {
+export const authenticateSignup = (req: RequestExtends, res: Response, next: NextFunction) => {
+  passport.authenticate('signup', { session: false }, (err: Error, user: UserWithoutPassword | false, info: any) => {
     if (err) {
       return next(err)
     }
@@ -15,8 +16,8 @@ export const authenticateSignup = (req: Request, res: Response, next: NextFuncti
   })(req, res, next)
 }
 
-export const authenticateLogin = (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate('login', { session: false }, (err: Error, user: User | false, info: any) => {
+export const authenticateLogin = (req: RequestExtends, res: Response, next: NextFunction) => {
+  passport.authenticate('login', { session: false }, (err: Error, user: UserWithoutPassword | false, info: any) => {
     if (err) {
       return next(err)
     }

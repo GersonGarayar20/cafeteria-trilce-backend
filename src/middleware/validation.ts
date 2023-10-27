@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
 import { loginSchema, signupSchema } from './validatedSchema'
+import { RequestExtends } from '../types'
 
-export function validatedSchemaSignup (req: Request, res: Response, next: NextFunction) {
+export function validatedSchemaSignup (req: RequestExtends, res: Response, next: NextFunction) {
   try {
     const validatedData = signupSchema.parse(req.body)
     req.validatedData = validatedData
@@ -12,7 +13,7 @@ export function validatedSchemaSignup (req: Request, res: Response, next: NextFu
   }
 }
 
-export function validatedSchemaLogin (req: Request, res: Response, next: NextFunction) {
+export function validatedSchemaLogin (req: RequestExtends, res: Response, next: NextFunction) {
   try {
     const validatedData = loginSchema.parse(req.body)
     req.validatedData = validatedData

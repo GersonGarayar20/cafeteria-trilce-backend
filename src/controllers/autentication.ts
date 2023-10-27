@@ -1,18 +1,14 @@
 import { Request, Response } from 'express'
+import { RequestExtends } from '../types'
 
-export const signUp = async (req: Request, res: Response) => {
+export const signUp = async (req: RequestExtends, res: Response) => {
   const user = req.user
 
-  const { password, ...dataUser } = user
-  const token = req.authToken
   const response = {
     status: 'ok',
-    user: {
-      ...dataUser
-    },
-    message: req?.info || ''
+    user,
+    message: req?.info
   }
-
   res.json({ response })
 }
 
