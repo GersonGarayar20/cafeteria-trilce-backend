@@ -34,7 +34,10 @@ passport.use('signup', new Strategy({
 
       }
     })
-    return done(null, user, { message: 'creado satisfactoriamente' })
+
+    const {password:Password,...userWithoutPassword } = user
+
+    return done(null, userWithoutPassword, { message: 'creado satisfactoriamente' })
   } catch (error) {
     done(error)
   }
@@ -48,7 +51,7 @@ passport.use('login', new Strategy({
     const user = await prisma.user.findUnique({
       where: {
         email
-      }
+      } 
     })
     if (user == null) {
       return done(null, false, { message: 'usuario o password no encontrado' })
@@ -58,7 +61,9 @@ passport.use('login', new Strategy({
 
     if (!isValidPassword) return done(null, false, { message: 'usuario o password incorrecto' })
 
-    return done(null, user, { message: 'logueado satisfactoriamente' })
+    const {password:Password,...userWithoutPassword } = user
+
+    return done(null, userWithoutPassword, { message: 'logueado satisfactoriamente' })
   } catch (error) {
     done(error)
   }
