@@ -1,17 +1,20 @@
 import { config } from 'dotenv'
 import { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
+import { RequestExtends, UserWithoutPassword } from '../types'
+import { Secret } from 'jsonwebtoken';
 config()
 
-export function generateToken (req: Request, res: Response, next: NextFunction) {
-  const { name, id_user } = req.user
+export function generateToken (req: RequestExtends, res: Response, next: NextFunction) {
+  const { name, id_user } = req.user as UserWithoutPassword
   const data = { name, id_user }
-  const token = jwt.sign(data, process.env.SECRET_KEY, { expiresIn: '24h' })
+  
+  const secretKey =   process.env.SECRET_KEY as Secret
+  const token = jwt.sign(data,secretKey, { expiresIn: '24h' })
   req.authToken = token
   next()
 }
-
-export const validateToken = (req: Request, res: Response, next: NextFunction) => {
+export const validateToken = (req: RequestExtends, res: Response, next: NextFunction) => {
   const token = req.header('Authorization')
 
   if (token) {
@@ -25,8 +28,9 @@ export const validateToken = (req: Request, res: Response, next: NextFunction) =
 
       // Aquí puedes verificar el token JWT
       try {
-        const decodedToken = jwt.verify(tokenString, process.env.SECRET_KEY)
-        req.authToken = decodedToken
+        const secretKey = process.env.SECRET_KEY as Secret
+        const decodedToken = jwt.verify(tokenString,secretKey)
+        req.authToken = String(decodedToken)
         next()
       } catch (error) {
         console.error('Token inválido')

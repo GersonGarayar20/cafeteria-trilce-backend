@@ -12,16 +12,13 @@ export const signUp = async (req: RequestExtends, res: Response) => {
   res.json({ response })
 }
 
-export const logIn = async (req: Request, res: Response) => {
+export const logIn = async (req: RequestExtends, res: Response) => {
   const user = req.user
-  const token = req?.authToken
-  const { password, ...dataUser } = user
+  const token = req.authToken
 
   const response = {
     status: 'ok',
-    user: {
-      ...dataUser
-    },
+    user,
     message: req?.info || '',
     token
   }

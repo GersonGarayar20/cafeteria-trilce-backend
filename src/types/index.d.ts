@@ -29,14 +29,19 @@ export interface RequestExtends extends Request {
   validatedData?: object
   info?: object
   token?: string
+  authToken?:string
+  
 }
 
 export interface User {
-  id_user: Int
+  id_user: number
   name: string
   email: string
   password: string
   role: string
+  
 }
+
+
 
 interface UserWithoutPassword extends Omit<User, 'password'> { }

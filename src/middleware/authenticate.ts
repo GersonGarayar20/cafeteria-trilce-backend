@@ -11,6 +11,7 @@ export const authenticateSignup = (req: RequestExtends, res: Response, next: Nex
       return res.status(401).json({ message: info.message })
     }
     req.user = user
+    console.log(req.user,14)
     req.info = info // Puedes guardar el usuario en el objeto request si lo necesitas
     next()
   })(req, res, next)
