@@ -1,24 +1,25 @@
 import { config } from 'dotenv'
-import { NextFunction, Request, Response } from 'express'
-import jwt from 'jsonwebtoken'
+import { NextFunction, Response, Request } from 'express'
+import jwt, { Secret } from 'jsonwebtoken'
 import { RequestExtends, UserWithoutPassword } from '../types'
-import { Secret } from 'jsonwebtoken';
+
 config()
+
+const tokenBlacklist = new Set<string>()
 
 export function generateToken (req: RequestExtends, res: Response, next: NextFunction) {
   const { name, id_user } = req.user as UserWithoutPassword
   const data = { name, id_user }
-  
-  const secretKey =   process.env.SECRET_KEY as Secret
-  const token = jwt.sign(data,secretKey, { expiresIn: '24h' })
+
+  const secretKey = process.env.SECRET_KEY as Secret
+  const token = jwt.sign(data, secretKey, { expiresIn: '24h' })
   req.authToken = token
   next()
 }
 export const validateToken = (req: RequestExtends, res: Response, next: NextFunction) => {
   const token = req.header('Authorization')
 
-  if (token) {
-    // Divide el token eliminando la palabra "Bearer" y el espacio en blanco
+  if (token !== null && token !== undefined) {
     const tokenParts = token.split(' ')
     if (tokenParts.length === 2 && tokenParts[0] === 'Bearer') {
       const tokenString = tokenParts[1]
@@ -26,10 +27,13 @@ export const validateToken = (req: RequestExtends, res: Response, next: NextFunc
       // Ahora, tokenString contiene la cadena real del token que puedes verificar
       console.log(tokenString)
 
+      if (tokenBlacklist.has(tokenString)) {
+        return res.status(401).json({ message: 'Token inválido' })
+      }
       // Aquí puedes verificar el token JWT
       try {
         const secretKey = process.env.SECRET_KEY as Secret
-        const decodedToken = jwt.verify(tokenString,secretKey)
+        const decodedToken = jwt.verify(tokenString, secretKey)
         req.authToken = String(decodedToken)
         next()
       } catch (error) {
@@ -42,6 +46,24 @@ export const validateToken = (req: RequestExtends, res: Response, next: NextFunc
     }
   } else {
     console.error('No se proporcionó el token')
-    res.status(404).json({ message: 'No se proporcionó el token' })
+    res.status(401).json({ message: 'No se proporcionó el token' })
   }
+}
+
+export const invalidateToken = (req: Request, res: Response, next: NextFunction) => {
+  const token = req.header('Authorization')
+
+  if (token == null || token === undefined) return res.status(401).json({ message: 'No se proporcionó el token' })
+
+  const tokenParts = token.split(' ')
+
+  if (tokenParts.length === 2 && tokenParts[0] === 'Bearer') {
+    const tokenString = tokenParts[1]
+
+    tokenBlacklist.add(tokenString)
+
+    return next()
+  }
+
+  return res.status(401).json({ message: 'Token Incorrecto' })
 }

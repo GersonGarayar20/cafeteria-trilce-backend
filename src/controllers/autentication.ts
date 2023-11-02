@@ -1,4 +1,4 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import { RequestExtends } from '../types'
 
 export const signUp = async (req: RequestExtends, res: Response) => {
@@ -7,7 +7,7 @@ export const signUp = async (req: RequestExtends, res: Response) => {
   const response = {
     status: 'ok',
     user,
-    message: req?.info
+    message: req.info
   }
   res.json({ response })
 }
@@ -19,8 +19,17 @@ export const logIn = async (req: RequestExtends, res: Response) => {
   const response = {
     status: 'ok',
     user,
-    message: req?.info || '',
+    message: req.info,
     token
+  }
+
+  res.json({ response })
+}
+
+export const logOut = async (req: RequestExtends, res: Response) => {
+  const response = {
+    status: 'ok',
+    message: 'token eliminado'
   }
 
   res.json({ response })

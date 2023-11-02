@@ -17,6 +17,7 @@ model User {
   password String
   role     String
   Order    Order[]
+
 }
 
 model Menu {
@@ -27,6 +28,8 @@ model Menu {
   Order       Order[]
   category    Category @relation(fields: [category_id], references: [id_category])
   category_id Int
+
+  @@index([category_id])
 }
 
 model Order {
@@ -40,6 +43,9 @@ model Order {
   total_price    Decimal
   state          String
   payment_method String
+
+  @@index([user_id])
+  @@index([menu_id])
 }
 
 model Category {
