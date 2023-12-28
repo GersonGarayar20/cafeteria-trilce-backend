@@ -1,12 +1,12 @@
 import { Router } from 'express'
 import { categories } from './categories'
-import { autentication } from './autentication'
+import { auth } from './auth'
 import { menus } from './menus'
 import { orders } from './orders'
 export const routes = Router()
 
 routes
   .use('/categories', categories)
-  .use('/autentication', autentication)
+  .use('/auth', auth)
   .use('/menus', menus)
   .use('/orders', orders)

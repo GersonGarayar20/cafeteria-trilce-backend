@@ -4,7 +4,7 @@ import { validateToken } from '../middleware/authJwt'
 export const categories = Router()
 
 categories
-  .get('/', validateToken, findAll)
+  .get('/', findAll)
   .post('/', validateToken, create)
   .put('/:id', validateToken, update)
   .delete('/:id', validateToken, remove)

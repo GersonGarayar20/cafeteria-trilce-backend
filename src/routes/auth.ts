@@ -4,9 +4,9 @@ import { authenticateLogin, authenticateSignup } from '../middleware/authenticat
 import { validatedSchemaLogin, validatedSchemaSignup } from '../middleware/validation'
 import { generateToken, invalidateToken } from '../middleware/authJwt'
 
-export const autentication = Router()
+export const auth = Router()
 
-autentication
+auth
   .post('/signup', validatedSchemaSignup, authenticateSignup, signUp)
 
   .post('/login', validatedSchemaLogin, authenticateLogin, generateToken, logIn)

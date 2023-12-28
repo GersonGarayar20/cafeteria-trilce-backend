@@ -5,9 +5,7 @@ import { validarOrder, partialValidarOrder } from '../schemas/orderSchema'
 export const findAll = async (req: Request, res: Response) => {
   const data = await getAllOrders()
   console.log(data)
-  res.json({
-    data
-  })
+  res.json({ status: 200, data, message: 'todos las ordenes' })
 }
 
 export const findOne = async (req: Request, res: Response) => {

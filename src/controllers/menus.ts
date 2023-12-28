@@ -4,9 +4,7 @@ import { validarMenu, partialValidarMenu } from '../schemas/menuSchema'
 
 export const findAll = async (req: Request, res: Response) => {
   const data = await getAllMenus()
-  res.json({
-    data
-  })
+  res.json({ status: 200, data, message: 'todos los menus' })
 }
 
 export const findOne = async (req: Request, res: Response) => {

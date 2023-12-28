@@ -5,11 +5,11 @@ export const signUp = async (req: RequestExtends, res: Response) => {
   const user = req.user
 
   const response = {
-    status: 'ok',
-    user,
+    status: 200,
+    data: user,
     message: req.info
   }
-  res.json({ response })
+  res.json({ ...response })
 }
 
 export const logIn = async (req: RequestExtends, res: Response) => {
@@ -17,8 +17,8 @@ export const logIn = async (req: RequestExtends, res: Response) => {
   const token = req.authToken
 
   const response = {
-    status: 'ok',
-    user,
+    status: 200,
+    data: user,
     message: req.info,
     token
   }
@@ -28,7 +28,7 @@ export const logIn = async (req: RequestExtends, res: Response) => {
 
 export const logOut = async (req: RequestExtends, res: Response) => {
   const response = {
-    status: 'ok',
+    status: 200,
     message: 'token eliminado'
   }
 

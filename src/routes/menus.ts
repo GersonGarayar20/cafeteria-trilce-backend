@@ -4,8 +4,8 @@ import { validateToken } from '../middleware/authJwt'
 export const menus = Router()
 
 menus
-  .get('/', validateToken, findAll)
-  .get('/:id', validateToken, findOne)
+  .get('/', findAll)
+  .get('/:id', findOne)
   .post('/', validateToken, create)
   .put('/:id', validateToken, update)
   .delete('/:id', validateToken, remove)
