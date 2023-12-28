@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { logIn, signUp, logOut } from '../controllers/autentication'
 import { authenticateLogin, authenticateSignup } from '../middleware/authenticate'
 import { validatedSchemaLogin, validatedSchemaSignup } from '../middleware/validation'
-import { generateToken, invalidateToken } from '../middleware/authJwt'
+import { generateToken, invalidateToken, validateToken } from '../middleware/authJwt'
 
 export const auth = Router()
 
@@ -12,3 +12,5 @@ auth
   .post('/login', validatedSchemaLogin, authenticateLogin, generateToken, logIn)
 
   .post('/logout', invalidateToken, logOut)
+
+  .get('/token', validateToken)

@@ -18,7 +18,7 @@ export function generateToken (req: RequestExtends, res: Response, next: NextFun
 }
 export const validateToken = (req: RequestExtends, res: Response, next: NextFunction) => {
   const token = req.header('Authorization')
-
+  console.log('entro hasta aqui')
   if (token !== null && token !== undefined) {
     const tokenParts = token.split(' ')
     if (tokenParts.length === 2 && tokenParts[0] === 'Bearer') {
@@ -27,26 +27,25 @@ export const validateToken = (req: RequestExtends, res: Response, next: NextFunc
       // Ahora, tokenString contiene la cadena real del token que puedes verificar
       console.log(tokenString)
 
-      if (tokenBlacklist.has(tokenString)) {
+      /* if (tokenBlacklist.has(tokenString)) {
         return res.status(401).json({ message: 'Token inválido' })
-      }
+      } */
       // Aquí puedes verificar el token JWT
       try {
         const secretKey = process.env.SECRET_KEY as Secret
         const decodedToken = jwt.verify(tokenString, secretKey)
-        req.authToken = String(decodedToken)
-        next()
+        res.json({ decodedToken, status: 200, message: 'usuario correcto' })
       } catch (error) {
         console.error('Token inválido')
-        res.status(404).json({ message: 'Token inválido' })
+        res.status(404).json({ status: 404, data: null, message: 'Token inválido' })
       }
     } else {
       console.error('Formato de token no válido')
-      res.status(404).json({ message: 'Formato de token no válido' })
+      res.status(404).json({ status: 404, data: null, message: 'Formato de token no válido' })
     }
   } else {
     console.error('No se proporcionó el token')
-    res.status(401).json({ message: 'No se proporcionó el token' })
+    res.status(401).json({ status: 404, data: null, message: 'No se proporcionó el token' })
   }
 }
 
