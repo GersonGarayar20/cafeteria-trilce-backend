@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express'
 import passport from '../../config/passport'
 import { RequestExtends, UserWithoutPassword } from '../types'
 import jwt, { Secret } from 'jsonwebtoken'
+import { HttpError } from '../utils/handlelError'
 export const authenticateSignup = (req: RequestExtends, res: Response, next: NextFunction) => {
   passport.authenticate('signup', { session: false }, (err: Error, user: UserWithoutPassword | false, info: any) => {
     if (err != null) {
@@ -30,36 +31,24 @@ export const authenticateLogin = (req: RequestExtends, res: Response, next: Next
   })(req, res, next)
 }
 
-export const validateToken = (req: RequestExtends, res: Response, next: NextFunction) => {
+export const validateTokenSesion = (req: RequestExtends, res: Response, next: NextFunction) => {
   const token = req.header('Authorization')
 
   if (token !== null && token !== undefined) {
     const tokenParts = token.split(' ')
     if (tokenParts.length === 2 && tokenParts[0] === 'Bearer') {
       const tokenString = tokenParts[1]
-
-      // Ahora, tokenString contiene la cadena real del token que puedes verificar
-      console.log(tokenString)
-
-      /* if (tokenBlacklist.has(tokenString)) {
-        return res.status(401).json({ message: 'Token inválido' })
-      } */
-      // Aquí puedes verificar el token JWT
       try {
         const secretKey = process.env.SECRET_KEY as Secret
         const decodedToken = jwt.verify(tokenString, secretKey)
-        req.authToken = String(decodedToken)
-        next()
+        res.json({ data: decodedToken, status: 200, message: 'usuario correcto' })
       } catch (error) {
-        console.error('Token inválido')
-        res.status(404).json({ message: 'Token inválido' })
+        HttpError(res, 'Token inválido', 400)
       }
     } else {
-      console.error('Formato de token no válido')
-      res.status(404).json({ message: 'Formato de token no válido' })
+      HttpError(res, 'Formato de token no válido', 400)
     }
   } else {
-    console.error('No se proporcionó el token')
-    res.status(401).json({ message: 'No se proporcionó el token' })
+    HttpError(res, 'No se proporcionó el token', 400)
   }
 }

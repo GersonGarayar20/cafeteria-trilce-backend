@@ -28,7 +28,7 @@ export interface RequestExtends extends Request {
   validatedData?: object
   info?: object
   token?: string
-  authToken?: string
+  authToken?: string | jwt.JwtPayload
 
 }
 
