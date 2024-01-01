@@ -4,37 +4,23 @@ import type { OrderInterface } from '../types'
 const prisma = new PrismaClient()
 
 export const getAllOrders = async () => {
-  try {
-    const data = await prisma.order.findMany({
-      include: {
-        menu: true,
-        user: true
-      }
-    })
-    console.log(data)
-    return data
-  } catch (err) {
-    console.log(err)
-    return err
-  } finally {
-    await prisma.$disconnect()
-  }
+  const data = await prisma.order.findMany({
+    include: {
+      menu: true,
+      user: true
+    }
+  })
+  return data
 }
 
 export const getOrderById = async (id: number) => {
-  try {
-    const data = await prisma.order.findUnique({
-      where: {
-        id_order: id
-      }
-    })
+  const data = await prisma.order.findUnique({
+    where: {
+      id_order: id
+    }
+  })
 
-    return data
-  } catch (err) {
-    return err
-  } finally {
-    await prisma.$disconnect()
-  }
+  return data
 }
 
 export const addOrder = async (order: OrderInterface) => {

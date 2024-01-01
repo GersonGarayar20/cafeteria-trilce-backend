@@ -5,23 +5,35 @@ import { HttpError, ValidateDataError } from '../utils/handlelError'
 import { RequestExtends } from '../types'
 
 export const findAll = async (req: Request, res: Response) => {
-  const data = await getAllOrders()
-  console.log(data)
-  res.json({ status: 200, data, message: 'todos las ordenes' })
+  try {
+    const data = await getAllOrders()
+    console.log(data)
+    res.json({ status: 200, data, message: 'todos las ordenes' })
+  } catch (e: any) {
+    return HttpError(res, 'ERROR_GET_USERS', 500)
+  }
 }
 
 export const findOne = async (req: Request, res: Response) => {
-  const { id } = req.params
+  try {
+    const { id } = req.params
 
-  const data = await getOrderById(+id)
-  res.json({
-    data
-  })
+    const data = await getOrderById(+id)
+    res.json({
+      status: 200,
+      data,
+      message: 'todos los usuarios'
+    })
+  } catch (error) {
+    return HttpError(res, 'ERROR_GET_USER', 500)
+  }
 }
 
 export const create = async (req: RequestExtends, res: Response) => {
   try {
     const role = req.authToken?.role
+    console.log(role)
+
     if (role !== 'admin') throw new ValidateDataError('No tienes permiso para crear una orden')
     const result = validarOrder(req.body)
 
@@ -29,10 +41,9 @@ export const create = async (req: RequestExtends, res: Response) => {
     const data = await addOrder(result.data)
     res.json({ status: 200, data, messasge: 'creado una orden' })
   } catch (e: any) {
-    if (e.name === 'ValidationDataError') {
-      HttpError(res, e.message, 400)
-    }
-    HttpError(res, 'ERROR_CREATE_USER', 500)
+    if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
+
+    return HttpError(res, 'ERROR_CREATE_ORDER', 500)
   }
 }
 
@@ -50,10 +61,9 @@ export const update = async (req: RequestExtends, res: Response) => {
     res.json({ status: 200, data, message: 'orden eliminado' })
   } catch (e: any) {
     console.log(e.name)
-    if (e.name === 'ValidationDataError') {
-      HttpError(res, e.message, 400)
-    }
-    HttpError(res, 'ERROR_CREATE_USER', 500)
+    if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
+
+    return HttpError(res, 'ERROR_UPDATE_USER', 500)
   }
 }
 
@@ -66,9 +76,8 @@ export const remove = async (req: RequestExtends, res: Response) => {
 
     res.json({ status: 200, data, message: 'orden eliminado' })
   } catch (e: any) {
-    if (e.name === 'ValidationDataError') {
-      HttpError(res, e.message, 400)
-    }
-    HttpError(res, 'ERROR_CREATE_USER', 500)
+    if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
+
+    return HttpError(res, 'ERROR_DELETE_USER', 500)
   }
 }

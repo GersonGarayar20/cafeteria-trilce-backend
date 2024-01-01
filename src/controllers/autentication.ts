@@ -23,7 +23,7 @@ export const logIn = async (req: RequestExtends, res: Response) => {
     token
   }
 
-  res.json({ response })
+  res.json({ ...response })
 }
 
 export const logOut = async (req: RequestExtends, res: Response) => {
@@ -32,5 +32,5 @@ export const logOut = async (req: RequestExtends, res: Response) => {
     message: 'token eliminado'
   }
 
-  res.json({ response })
+  res.json({ ...response })
 }

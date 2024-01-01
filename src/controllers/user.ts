@@ -53,12 +53,12 @@ export async function create (req: RequestExtends, res: Response) {
 
     res.json({ status: 200, data: [data], message: ' datos del usuuario ' })
   } catch (e: any) {
-    if (e.name === 'ValidationDataError') {
-      HttpError(res, e.message, 400)
-    }
-    HttpError(res, 'ERROR_CREATE_USER', 500)
+    if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
+
+    return HttpError(res, 'ERROR_CREATE_USER', 500)
   }
 }
+
 export async function update (req: RequestExtends, res: Response) {
   try {
     const role = req.authToken?.role
@@ -70,12 +70,12 @@ export async function update (req: RequestExtends, res: Response) {
 
     res.json({ status: 200, data: [data], message: ' datos del usuuario ' + id })
   } catch (e: any) {
-    if (e.name === 'ValidationDataError') {
-      HttpError(res, e.message, 400)
-    }
-    HttpError(res, 'ERROR_UPDATE_USER', 500)
+    if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
+
+    return HttpError(res, 'ERROR_UPDATE_USER', 500)
   }
 }
+
 export async function remove (req: RequestExtends, res: Response) {
   try {
     const role = req.authToken?.role
@@ -88,9 +88,8 @@ export async function remove (req: RequestExtends, res: Response) {
 
     res.json({ status: 200, data: [data], message: ' usuario ' + id + ' eliminado' })
   } catch (e: any) {
-    if (e.name === 'ValidationDataError') {
-      return HttpError(res, e.message, 400)
-    }
-    HttpError(res, 'ERROR_DELETE_USER', 500)
+    if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
+
+    return HttpError(res, 'ERROR_DELETE_USER', 500)
   }
 }

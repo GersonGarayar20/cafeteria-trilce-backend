@@ -5,8 +5,12 @@ import { RequestExtends } from '../types'
 import { HttpError, ValidateDataError } from '../utils/handlelError'
 
 export const findAll = async (req: Request, res: Response) => {
-  const data = await getAllCategories()
-  res.json({ status: 200, data, message: 'todos los usuarios' })
+  try {
+    const data = await getAllCategories()
+    res.json({ status: 200, data, message: 'todos los usuarios' })
+  } catch (e: any) {
+    HttpError(res, 'ERROR_NOT_FOUND_CATEGORIES', 500)
+  }
 }
 
 export const create = async (req: RequestExtends, res: Response) => {
@@ -28,23 +32,35 @@ export const create = async (req: RequestExtends, res: Response) => {
   }
 }
 
-export const update = async (req: Request, res: Response) => {
-  const result = validarCategory(req.body)
+export const update = async (req: RequestExtends, res: Response) => {
+  try {
+    const role = req.authToken?.role
+    if (role !== 'admin') throw new ValidateDataError('No tienes permiso para actualiar un menu')
+    const result = validarCategory(req.body)
+    if (!result.success) throw new ValidateDataError('falta agregar datos')
 
-  if (result.success) {
     const { id } = req.params
-    const data = await updateCategory(+id, result.data)
-    res.json({
-      data
-    })
-  } else {
-    res.status(404).json({ data: result.error })
+    const { body } = req
+    const data = await updateCategory(+id, body)
+    res.json({ status: 200, data, message: 'categoria creado' })
+  } catch (e: any) {
+    if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
+
+    return HttpError(res, 'ERROR_UPDATE_USER', 500)
   }
 }
-export const remove = async (req: Request, res: Response) => {
-  const { id } = req.params
-  const data = await deleteCategory(+id)
-  res.json({
-    data
-  })
+
+export const remove = async (req: RequestExtends, res: Response) => {
+  try {
+    const role = req.authToken?.role
+    if (role !== 'admin') throw new ValidateDataError('No tienes permiso para actualiar un menu')
+
+    const { id } = req.params
+    const data = await deleteCategory(+id)
+    res.json({ status: 200, data, message: 'categoria removida ' + id })
+  } catch (e: any) {
+    if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
+
+    return HttpError(res, 'ERROR_REMOVE_CATEGORY', 500)
+  }
 }
