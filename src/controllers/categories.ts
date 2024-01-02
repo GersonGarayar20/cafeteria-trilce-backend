@@ -16,7 +16,7 @@ export const findAll = async (req: Request, res: Response) => {
 export const create = async (req: RequestExtends, res: Response) => {
   try {
     const role = req.authToken?.role === 'admin'
-    if (role) throw new ValidateDataError('No tienes permiso para crear una categoria')
+    if (!role) throw new ValidateDataError('No tienes permiso para crear una categoria')
 
     const result = validarCategory(req.body)
 
