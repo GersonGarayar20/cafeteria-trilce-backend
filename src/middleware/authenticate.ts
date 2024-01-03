@@ -6,10 +6,10 @@ import { HttpError } from '../utils/handlelError'
 export const authenticateSignup = (req: RequestExtends, res: Response, next: NextFunction) => {
   passport.authenticate('signup', { session: false }, (err: Error, user: UserWithoutPassword | false, info: any) => {
     if (err != null) {
-      return res.json({ message: info.message })
+      return res.status(500).json({ status: 500, data: null, message: 'problemas de la base de datos' })
     }
     if (user === false) {
-      return res.status(401).json({ message: info.message })
+      return res.status(400).json({ status: 400, data: null, message: info.message })
     }
     req.user = user
     req.info = info.message// Puedes guardar el usuario en el objeto request si lo necesitas
@@ -20,10 +20,10 @@ export const authenticateSignup = (req: RequestExtends, res: Response, next: Nex
 export const authenticateLogin = (req: RequestExtends, res: Response, next: NextFunction) => {
   passport.authenticate('login', { session: false }, (err: Error, user: UserWithoutPassword | false, info: any) => {
     if (err != null) {
-      return res.json({ message: info.message })
+      return res.json({ status: 500, data: null, message: 'problemas de la base de datos' })
     }
     if (user === false) {
-      return res.status(401).json({ message: info.message })
+      return res.status(401).json({ status: 400, data: null, message: info.message })
     }
     req.user = user
     req.info = info.message // Puedes guardar el usuario en el objeto request si lo necesitas
