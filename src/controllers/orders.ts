@@ -19,26 +19,32 @@ export const findOne = async (req: Request, res: Response) => {
     const { id } = req.params
 
     const data = await getOrderById(+id)
+    if (data === null) throw new ValidateDataError('la orden no existe')
     res.json({
       status: 200,
       data,
       message: 'todos los usuarios'
     })
-  } catch (error) {
-    return HttpError(res, 'ERROR_GET_USER', 500)
+  } catch (e: any) {
+    if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
+
+    return HttpError(res, 'ERROR_CREATE_ORDER', 500)
   }
 }
 
 export const create = async (req: RequestExtends, res: Response) => {
   try {
     const role = req.authToken?.role
-    console.log(role)
+    const { body } = req
+    console.log(body)
 
-    if (role !== 'admin') throw new ValidateDataError('No tienes permiso para crear una orden')
+    if (role !== 'admin' && role !== 'client') throw new ValidateDataError('No tienes permiso para crear una orden')
     const result = validarOrder(req.body)
 
     if (!result.success) throw new ValidateDataError('falta agregar datos o son incorrectos ')
-    const data = await addOrder(result.data)
+    const data = await addOrder(body)
+    if (data == null) throw new ValidateDataError('falta agregar datos o son incorrectos ')
+
     res.json({ status: 200, data, messasge: 'creado una orden' })
   } catch (e: any) {
     if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
@@ -50,7 +56,8 @@ export const create = async (req: RequestExtends, res: Response) => {
 export const update = async (req: RequestExtends, res: Response) => {
   try {
     const role = req.authToken?.role
-    if (role !== 'admin') throw new ValidateDataError('No tienes permiso para crear una categoria')
+
+    if (role !== 'admin' && role !== 'client') throw new ValidateDataError('No tienes permiso para crear una categoria')
 
     const result = partialValidarOrder(req.body)
     if (!result.success) throw new ValidateDataError('falta agregar datos o son incorrectos ')
@@ -70,7 +77,7 @@ export const update = async (req: RequestExtends, res: Response) => {
 export const remove = async (req: RequestExtends, res: Response) => {
   try {
     const role = req.authToken?.role
-    if (role !== 'admin') throw new ValidateDataError('No tienes permiso para eliminar una orden')
+    if (role !== 'admin' && role !== 'client') throw new ValidateDataError('No tienes permiso para eliminar una orden')
     const { id } = req.params
     const data = await deleteOrder(+id)
 

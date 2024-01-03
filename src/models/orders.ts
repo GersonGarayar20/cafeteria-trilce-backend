@@ -19,12 +19,12 @@ export const getOrderById = async (id: number) => {
       id_order: id
     }
   })
-
+  console.log(data)
   return data
 }
 
 export const addOrder = async (order: OrderInterface) => {
-  const { menu_id: menuId } = order
+  const { menu_id: menuId, user_id } = order
 
   const menu = await prisma.menu.findUnique({
     where: {
@@ -32,7 +32,13 @@ export const addOrder = async (order: OrderInterface) => {
     }
   })
 
-  if (menu !== null) {
+  const userid = await prisma.user.findUnique({
+    where: {
+      id_user: user_id
+    }
+  })
+
+  if (menu !== null && userid !== null) {
     const total = Number(menu.price) * order.amount
     const data = await prisma.order.create({
       data: {
@@ -48,6 +54,8 @@ export const addOrder = async (order: OrderInterface) => {
 
     return data
   }
+
+  return null
 }
 
 export const updateOrder = async (id: number, order: any) => {
