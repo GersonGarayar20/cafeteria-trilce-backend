@@ -17,7 +17,9 @@ CREATE TABLE `Menu` (
     `description` VARCHAR(191) NULL,
     `price` DECIMAL(65, 30) NOT NULL,
     `category_id` INTEGER NOT NULL,
+    `url` VARCHAR(191) NOT NULL,
 
+    INDEX `Menu_category_id_idx`(`category_id`),
     PRIMARY KEY (`id_menu`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -32,6 +34,8 @@ CREATE TABLE `Order` (
     `state` VARCHAR(191) NOT NULL,
     `payment_method` VARCHAR(191) NOT NULL,
 
+    INDEX `Order_user_id_idx`(`user_id`),
+    INDEX `Order_menu_id_idx`(`menu_id`),
     PRIMARY KEY (`id_order`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

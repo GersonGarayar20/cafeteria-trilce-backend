@@ -28,7 +28,7 @@ model Menu {
   Order       Order[]
   category    Category @relation(fields: [category_id], references: [id_category])
   category_id Int
-
+  url         String
   @@index([category_id])
 }
 

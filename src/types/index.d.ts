@@ -11,6 +11,7 @@ export interface MenuInterface {
   description: string
   price: number
   category_id: number
+  url: string
 }
 
 export interface OrderInterface {

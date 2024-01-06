@@ -27,11 +27,11 @@ export const findOne = async (req: Request, res: Response) => {
 export const create = async (req: RequestExtends, res: Response) => {
   try {
     const role = req.authToken?.role
-    console.log(role)
     if (role !== 'admin') throw new ValidateDataError('No tienes permiso para crear un menu')
     console.log('entro')
 
     const result = validarMenu(req.body)
+    console.log({ result })
     if (!result.success) throw new ValidateDataError('falta agregar datos')
     const data = await addMenu(result.data)
 
