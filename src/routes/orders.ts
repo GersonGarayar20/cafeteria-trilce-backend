@@ -8,4 +8,4 @@ orders
   .get('/:id', findOne)
   .post('/', validateToken, create)
   .put('/:id', validateToken, update)
-  .delete('/:id', validateToken, remove)
+  .delete('/:id', remove)

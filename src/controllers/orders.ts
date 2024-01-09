@@ -7,9 +7,9 @@ import { RequestExtends } from '../types'
 export const findAll = async (req: Request, res: Response) => {
   try {
     const data = await getAllOrders()
-    console.log(data)
     res.json({ status: 200, data, message: 'todos las ordenes' })
   } catch (e: any) {
+    console.log(e.message)
     return HttpError(res, 'ERROR_GET_USERS', 500)
   }
 }
@@ -76,8 +76,8 @@ export const update = async (req: RequestExtends, res: Response) => {
 
 export const remove = async (req: RequestExtends, res: Response) => {
   try {
-    const role = req.authToken?.role
-    if (role !== 'admin' && role !== 'client') throw new ValidateDataError('No tienes permiso para eliminar una orden')
+    /* const role = req.authToken?.role
+    if (role !== 'admin' && role !== 'client') throw new ValidateDataError('No tienes permiso para eliminar una orden') */
     const { id } = req.params
     const data = await deleteOrder(+id)
 

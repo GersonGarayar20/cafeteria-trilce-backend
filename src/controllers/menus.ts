@@ -6,6 +6,7 @@ import { RequestExtends } from '../types'
 
 export const findAll = async (req: Request, res: Response) => {
   try {
+    console.log("entro")
     const data = await getAllMenus()
     res.json({ status: 200, data, message: 'todos los menus' })
   } catch (e) {
@@ -39,7 +40,7 @@ export const create = async (req: RequestExtends, res: Response) => {
   } catch (e: any) {
     if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
 
-    return HttpError(res, 'ERROR_CREATE_USER', 500)
+    return HttpError(res, 'ERROR_CREATE_Menu', 500)
   }
 }
 
