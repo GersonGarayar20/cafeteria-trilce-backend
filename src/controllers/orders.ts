@@ -7,7 +7,7 @@ import { RequestExtends } from '../types'
 export const findAll = async (req: Request, res: Response) => {
   try {
     const data = await getAllOrders()
-    res.json({ status: 200, data, message: 'todos las ordenes' })
+    res.json({ status: 200, data: [data], message: 'todos las ordenes' })
   } catch (e: any) {
     console.log(e.message)
     return HttpError(res, 'ERROR_GET_USERS', 500)
