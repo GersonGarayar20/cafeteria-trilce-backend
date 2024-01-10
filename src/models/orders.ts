@@ -6,7 +6,8 @@ const prisma = new PrismaClient()
 export const getAllOrders = async () => {
   const data = await prisma.order.findMany({
     include: {
-      user: true
+      user: true,
+      menu: true
     }
   })
   return data
