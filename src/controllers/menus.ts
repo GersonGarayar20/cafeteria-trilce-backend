@@ -3,10 +3,11 @@ import { getAllMenus, getMenuById, addMenu, updateMenu, deleteMenu } from '../mo
 import { validarMenu, partialValidarMenu } from '../schemas/menuSchema'
 import { HttpError, ValidateDataError } from '../utils/handlelError'
 import { RequestExtends } from '../types'
+import { getAllOrders } from '../models/orders'
 
 export const findAll = async (req: Request, res: Response) => {
   try {
-    console.log("entro")
+    console.log('entro')
     const data = await getAllMenus()
     res.json({ status: 200, data, message: 'todos los menus' })
   } catch (e) {
@@ -50,6 +51,11 @@ export const update = async (req: RequestExtends, res: Response) => {
     if (role !== 'admin') throw new ValidateDataError('No tienes permiso para actualiar un menu')
     const { body } = req
     const { id } = req.params
+
+    const dataOrders = await getAllOrders()
+
+    const isOrder = dataOrders.find(orden => orden.menu_id === +id)
+    if (isOrder != null) return res.json({ status: 404, mesage: 'el menu esta vinculado con el otra tabla', data: isOrder })
     const result = partialValidarMenu(body)
 
     if (!result.success) throw new ValidateDataError('falta agregar datos')
@@ -67,6 +73,12 @@ export const remove = async (req: RequestExtends, res: Response) => {
     const role = req.authToken?.role
     if (role !== 'admin') throw new ValidateDataError('No tienes permiso para eliminar un menu')
     const { id } = req.params
+
+    const dataOrders = await getAllOrders()
+
+    const isOrder = dataOrders.find(orden => orden.menu_id === +id)
+    if (isOrder != null) return res.json({ status: 404, mesage: 'el menu esta vinculado con el otra tabla', data: isOrder })
+
     const data = await deleteMenu(+id)
     res.json({ status: 200, data, message: 'menu eliminado' })
   } catch (e: any) {

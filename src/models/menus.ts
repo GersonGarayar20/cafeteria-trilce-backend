@@ -4,20 +4,13 @@ import type { MenuInterface } from '../types'
 const prisma = new PrismaClient()
 
 export const getAllMenus = async () => {
-  try {
-    const data = await prisma.menu.findMany({
-      include: {
-        category: true
-      }
-    })
-    console.log(data)
-    return data
-  } catch (err) {
-    console.log(err)
-    return err
-  } finally {
-    await prisma.$disconnect()
-  }
+  const data = await prisma.menu.findMany({
+    include: {
+      category: true
+    }
+  })
+  console.log(data)
+  return data
 }
 
 export const getMenuById = async (id: number) => {

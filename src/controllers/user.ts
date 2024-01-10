@@ -4,6 +4,7 @@ import { RequestExtends, User, UserWithoutPassword } from '../types'
 import { HttpError, ValidateDataError } from '../utils/handlelError'
 import { validateUserSchema } from '../schemas/userSchema'
 import { encryptPassword } from '../../config/encrypt'
+import { getAllOrders } from '../models/orders'
 
 export async function findAll (req: Request, res: Response) {
   try {
@@ -66,6 +67,12 @@ export async function update (req: RequestExtends, res: Response) {
 
     const { body } = req
     const { id } = req.params
+
+    const dataOrders = await getAllOrders()
+
+    const isOrder = dataOrders.find(orden => orden.user_id === +id)
+    if (isOrder != null) return res.status(404).json({ status: 404, mesage: 'el usuario esta vinculado con el otra tabla', data: isOrder })
+
     const data = await updateOneUser(+id, body)
 
     res.json({ status: 200, data: [data], message: ' datos del usuuario ' + id })
@@ -83,6 +90,12 @@ export async function remove (req: RequestExtends, res: Response) {
 
     const { id } = req.params
     const numId = parseInt(id)
+
+    const dataOrders = await getAllOrders()
+
+    const isOrder = dataOrders.find(orden => orden.user_id === +id)
+    if (isOrder != null) return res.status(404).json({ status: 404, mesage: 'el usuario esta vinculado con el otra tabla', data: isOrder })
+
     if (isNaN(numId)) throw new ValidateDataError('ingreso de dato incorrecto ')
     const data = await deleteOneUser(+id)
 

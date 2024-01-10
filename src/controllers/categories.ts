@@ -3,6 +3,7 @@ import { getAllCategories, addCategory, updateCategory, deleteCategory } from '.
 import { validarCategory } from '../schemas/categorySchema'
 import { RequestExtends } from '../types'
 import { HttpError, ValidateDataError } from '../utils/handlelError'
+import { getAllMenus } from '../models/menus'
 
 export const findAll = async (req: Request, res: Response) => {
   try {
@@ -41,6 +42,12 @@ export const update = async (req: RequestExtends, res: Response) => {
 
     const { id } = req.params
     const { body } = req
+
+    const dataMenus = await getAllMenus()
+
+    const isMenu = dataMenus.find(menu => menu.category_id === +id)
+    if (isMenu != null) return res.json({ status: 404, mesage: 'la categoria que quiere actualizar esta vinculado con el otra tabla', data: isMenu })
+
     const data = await updateCategory(+id, body)
     res.json({ status: 200, data, message: 'categoria creado' })
   } catch (e: any) {
@@ -56,6 +63,12 @@ export const remove = async (req: RequestExtends, res: Response) => {
     if (role !== 'admin') throw new ValidateDataError('No tienes permiso para actualiar un menu')
 
     const { id } = req.params
+
+    const dataMenus = await getAllMenus()
+
+    const isMenu = dataMenus.find(menu => menu.category_id === +id)
+    if (isMenu != null) return res.json({ status: 404, mesage: 'la categoria que quiere actualizar esta vinculado con el otra tabla', data: isMenu })
+
     const data = await deleteCategory(+id)
     res.json({ status: 200, data, message: 'categoria removida ' + id })
   } catch (e: any) {
