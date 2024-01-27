@@ -43,11 +43,6 @@ export const update = async (req: RequestExtends, res: Response) => {
     const { id } = req.params
     const { body } = req
 
-    const dataMenus = await getAllMenus()
-
-    const isMenu = dataMenus.find(menu => menu.category_id === +id)
-    if (isMenu != null) return res.json({ status: 404, mesage: 'la categoria que quiere actualizar esta vinculado con el otra tabla', data: isMenu })
-
     const data = await updateCategory(+id, body)
     res.json({ status: 200, data, message: 'categoria creado' })
   } catch (e: any) {
