@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getAllCategories, addCategory, updateCategory, deleteCategory } from '../models/categories'
+import { getAllCategories, getCategoryById, addCategory, updateCategory, deleteCategory } from '../models/categories'
 import { validarCategory } from '../schemas/categorySchema'
 import { RequestExtends } from '../types'
 import { HttpError, ValidateDataError } from '../utils/handlelError'
@@ -9,6 +9,18 @@ export const findAll = async (req: Request, res: Response) => {
   try {
     const data = await getAllCategories()
     res.json({ status: 200, data, message: 'todos los usuarios' })
+  } catch (e: any) {
+    HttpError(res, 'ERROR_NOT_FOUND_CATEGORIES', 500)
+  }
+}
+
+export const findOne = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    const category = await getCategoryById(+id)
+
+    res.json({ status: 200, data: category, message: 'todos los usuarios' })
   } catch (e: any) {
     HttpError(res, 'ERROR_NOT_FOUND_CATEGORIES', 500)
   }
@@ -65,7 +77,7 @@ export const remove = async (req: RequestExtends, res: Response) => {
     if (isMenu != null) return res.json({ status: 404, mesage: 'la categoria que quiere actualizar esta vinculado con el otra tabla', data: isMenu })
 
     const data = await deleteCategory(+id)
-    res.json({ status: 200, data, message: 'categoria removida ' + id })
+    res.json({ status: 200, data, message: 'categoria removida ' })
   } catch (e: any) {
     if (e.name === 'ValidationDataError') return HttpError(res, e.message, 400)
 

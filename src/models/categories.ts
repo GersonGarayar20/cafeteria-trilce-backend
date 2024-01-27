@@ -16,6 +16,19 @@ export const getAllCategories = async () => {
   }
 }
 
+export const getCategoryById = async (id: number) => {
+  try {
+    const data = await prisma.category.findFirst({ where: { id_category: id } })
+    console.log(data)
+    return data
+  } catch (err) {
+    console.log(err)
+    return err
+  } finally {
+    await prisma.$disconnect()
+  }
+}
+
 export const addCategory = async ({ name }: CategoryInterface) => {
   try {
     const data = await prisma.category.create({
